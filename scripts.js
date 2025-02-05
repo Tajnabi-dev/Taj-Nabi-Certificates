@@ -1,66 +1,42 @@
-// Fetch certificates from the JSON file
-const certificatesUrl = 'certificates.json';
-let certificates = [];
-let currentPage = 1;
 const certificatesPerPage = 10;
+    let currentPage = 1;
+    let certificates = [];
 
-fetch(certificatesUrl)
-    .then(response => response.json())
-    .then(data => {
+    // Fetch the JSON data and display it dynamically
+    fetch('certificates.json')
+      .then(response => response.json())
+      .then(data => {
         certificates = data;
-        displayCertificates();
-        setupPagination();
-    })
-    .catch(error => console.error('Error fetching certificates:', error));
+        displayCertificates(currentPage);
+      })
+      .catch(error => console.error('Error fetching certificates:', error));
 
-// Function to display certificates on the page
-function displayCertificates() {
-    const startIndex = (currentPage - 1) * certificatesPerPage;
-    const endIndex = startIndex + certificatesPerPage;
-    const certificatesToDisplay = certificates.slice(startIndex, endIndex);
+    // Function to display certificates based on the current page
+    function displayCertificates(page) {
+      const start = (page - 1) * certificatesPerPage;
+      const end = start + certificatesPerPage;
+      const paginatedCertificates = certificates.slice(start, end);
 
-    const listContainer = document.getElementById('certificates-list');
-    listContainer.innerHTML = ''; // Clear the list
+      const tableBody = document.getElementById('certificate-list');
+      tableBody.innerHTML = ''; // Clear the table before adding new rows
 
-    const ul = document.createElement('ul');
-    certificatesToDisplay.forEach(cert => {
-        const li = document.createElement('li');
-        const link = document.createElement('a');
-        link.href = `certificates/${cert}`;
-        link.target = '_blank';
-        link.innerText = cert;
-        li.appendChild(link);
-        ul.appendChild(li);
-    });
+      paginatedCertificates.forEach((certificate, index) => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td>${start + index + 1}</td>
+          <td>${certificate.name}</td>
+          <td><a href="${certificate.link}" target="_blank">View</a></td>
+        `;
+        tableBody.appendChild(row);
+      });
 
-    listContainer.appendChild(ul);
-    document.getElementById('page-number').innerText = `Page ${currentPage}`;
-}
+      // Enable or disable pagination buttons
+      document.getElementById('prevPage').classList.toggle('disabled', currentPage === 1);
+      document.getElementById('nextPage').classList.toggle('disabled', currentPage * certificatesPerPage >= certificates.length);
+    }
 
-// Function to setup pagination buttons
-function setupPagination() {
-    const totalPages = Math.ceil(certificates.length / certificatesPerPage);
-
-    const prevButton = document.getElementById('prev-btn');
-    const nextButton = document.getElementById('next-btn');
-
-    // Disable Previous button on the first page
-    prevButton.disabled = currentPage === 1;
-
-    // Disable Next button on the last page
-    nextButton.disabled = currentPage === totalPages;
-
-    prevButton.onclick = () => {
-        if (currentPage > 1) {
-            currentPage--;
-            displayCertificates();
-        }
-    };
-
-    nextButton.onclick = () => {
-        if (currentPage < totalPages) {
-            currentPage++;
-            displayCertificates();
-        }
-    };
-}
+    // Function to change pages
+    function changePage(direction) {
+      currentPage += direction;
+      displayCertificates(currentPage);
+    }
