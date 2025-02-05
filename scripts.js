@@ -1,6 +1,4 @@
 document.addEventListener("DOMContentLoaded", function () {
-    alert("comiing");
-    console.log("DOM loaded and parsed");
     fetch("certificates.json")
         .then(response => response.json())
         .then(certificates => {
