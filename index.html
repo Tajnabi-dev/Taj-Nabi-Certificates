@@ -3,26 +3,29 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Certificates</title>
+    <title>My Certificates</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div class="container">
-        <header>
-            <h1>My Certificates</h1>
-        </header>
-        
-        <div id="certificates-list">
-            <!-- Certificates will be listed here -->
-        </div>
-        
-        <div class="pagination">
-            <button id="prev-btn">Previous</button>
-            <span id="page-number">Page 1</span>
-            <button id="next-btn">Next</button>
-        </div>
-    </div>
 
-    <script src="scripts.js"></script>
+<header>My Certificates</header>
+
+<div class="table-container">
+    <table>
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Certificate Name</th>
+                <th>View</th>
+            </tr>
+        </thead>
+        <tbody id="certificate-list">
+            <!-- Certificates will be inserted here dynamically -->
+        </tbody>
+    </table>
+</div>
+
+<script src="scripts.js"></script>
+
 </body>
 </html>
